@@ -4,10 +4,12 @@ import models
 from database import SessionLocal, engine
 import crud
 import schemas
+from mangum import Mangum
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+handler = Mangum(app)
 
 
 def get_db():
