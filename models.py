@@ -6,21 +6,24 @@ import enum
 
 Base = declarative_base()
 
+
 class RoleType(enum.Enum):
     patient = "patient"
     physician = "physician"
     pharmacist = "pharmacist"
 
+
 class ReferralType(enum.Enum):
     EAP = "EAP"
     CT = "CT"
+
 
 class StageType(enum.Enum):
     lead = "lead"
     patient = "patient"
     referral = "referral"
 
-# Extended Person entity to capture both initial and returning patient logic
+
 class Person(Base):
     __tablename__ = "person"
     person_id = Column(Integer, primary_key=True)
@@ -37,7 +40,7 @@ class Person(Base):
     patient_journeys = relationship("PatientJourney", back_populates="person")
     physician_details = relationship("PhysicianDetails", back_populates="person", uselist=False)
 
-# Enhanced Referral entity to include more explicit CT and EAP details
+
 class Referral(Base):
     __tablename__ = "referral"
     referral_id = Column(Integer, primary_key=True)
@@ -46,12 +49,11 @@ class Referral(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
 
-    # Relationships with specific dossiers
     ct_dossier = relationship("CTDossier", back_populates="referral", uselist=False)
     eap_dossier = relationship("EAPDossier", back_populates="referral", uselist=False)
     patient_journeys = relationship("PatientJourney", back_populates="referral")
 
-# Refined PatientJourney to better track the physician assignment and conversion process
+
 class PatientJourney(Base):
     __tablename__ = "patient_journey"
     journey_id = Column(Integer, primary_key=True)
@@ -67,6 +69,7 @@ class PatientJourney(Base):
     referral = relationship("Referral", back_populates="patient_journeys")
     medical_condition = relationship("MedicalCondition", back_populates="patient_journeys")
     referring_physician = relationship("PhysicianDetails", backref="physician_details")
+
 
 class Hospital(Base):
     __tablename__ = "hospital"
@@ -85,13 +88,14 @@ class PhysicianDetails(Base):
     hospital = relationship("Hospital", back_populates="physician_details")
 
 
-# Adding missing models for completeness
+
 class MedicalCondition(Base):
     __tablename__ = "medical_condition"
     medical_condition_id = Column(Integer, primary_key=True)
     name = Column(String)
     abbreviation = Column(String)
     patient_journeys = relationship("PatientJourney", back_populates="medical_condition")
+
 
 class Appointment(Base):
     __tablename__ = "appointment"
@@ -102,6 +106,7 @@ class Appointment(Base):
     notes = Column(Text)
     person = relationship("Person", back_populates="appointments")
 
+
 class CTDossier(Base):
     __tablename__ = "ct_dossier"
     id = Column(Integer, primary_key=True)
@@ -111,6 +116,7 @@ class CTDossier(Base):
     protocol_summary = Column(Text)
     referral = relationship("Referral", back_populates="ct_dossier")
 
+
 class EAPDossier(Base):
     __tablename__ = "eap_dossier"
     id = Column(Integer, primary_key=True)
@@ -118,7 +124,3 @@ class EAPDossier(Base):
     eap_name = Column(String)
     eligibility_criteria = Column(Text)
     referral = relationship("Referral", back_populates="eap_dossier")
-
-
-
-
