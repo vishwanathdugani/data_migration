@@ -5,6 +5,7 @@ import uuid
 
 Base = declarative_base()
 
+
 class Contact(Base):
     __tablename__ = 'contact'
     contact_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

@@ -11,6 +11,7 @@ class RoleType(enum.Enum):
     patient = "patient"
     physician = "physician"
     pharmacist = "pharmacist"
+    patient_navigator = "patient_navigator"
 
 
 class ReferralType(enum.Enum):
@@ -62,7 +63,7 @@ class PatientJourney(Base):
     stage = Column(Enum(StageType))
     referral_id = Column(Integer, ForeignKey("referral.referral_id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    physician_details_id = Column(Integer, ForeignKey("physician_details.physician_details_id"))  # Explicit physician assignment
+    physician_details_id = Column(Integer, ForeignKey("physician_details.physician_details_id"))
 
     # Relationships
     person = relationship("Person", back_populates="patient_journeys")
@@ -86,7 +87,6 @@ class PhysicianDetails(Base):
     hospital_id = Column(Integer, ForeignKey("hospital.hospital_id"))
     person = relationship("Person", back_populates="physician_details")
     hospital = relationship("Hospital", back_populates="physician_details")
-
 
 
 class MedicalCondition(Base):
