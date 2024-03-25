@@ -34,7 +34,6 @@ class Person(Base):
     role_type = Column(Enum(RoleType))
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    is_returning = Column(Boolean, default=False)  # Flag to indicate a returning patient
 
     # Relationships
     appointments = relationship("Appointment", back_populates="person")
@@ -64,6 +63,7 @@ class PatientJourney(Base):
     referral_id = Column(Integer, ForeignKey("referral.referral_id"), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     physician_details_id = Column(Integer, ForeignKey("physician_details.physician_details_id"))
+    is_returning = Column(Boolean, default=False)
 
     # Relationships
     person = relationship("Person", back_populates="patient_journeys")
